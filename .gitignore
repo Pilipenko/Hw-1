@@ -1,0 +1,15 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/MvcAspAzure/.vs/MvcAspAzure/CopilotIndices/17.13.441.19478
+/MvcAspAzure/.vs/MvcAspAzure/DesignTimeBuild
+/MvcAspAzure/.vs/MvcAspAzure/FileContentIndex
+/MvcAspAzure/.vs/MvcAspAzure/v17
+/MvcAspAzure/.vs/ProjectEvaluation
+/MvcAspAzure/bin/Debug/net8.0
+/MvcAspAzure/obj
+/MvcAspAzure/wwwroot
+/MvcAspAzure/Properties
+/MvcAspAzure/appsettings.Development.json
+/MvcAspAzure/appsettings.json

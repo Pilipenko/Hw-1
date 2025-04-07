@@ -13,3 +13,9 @@
 /MvcAspAzure/Properties
 /MvcAspAzure/appsettings.Development.json
 /MvcAspAzure/appsettings.json
+/MvcAspAzure.Application/bin/Debug/net8.0
+/MvcAspAzure.Application/obj
+/MvcAspAzure.Domain/bin/Debug/net8.0
+/MvcAspAzure.Domain/obj
+/MvcAspAzure.Infrastructure/obj
+/MvcAspAzure.Infrastructure/bin/Debug/net8.0

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+using MvcAspAzure.Domain.Entity;
 using MvcAspAzure.Domain.Repository;
 using MvcAspAzure.Infrastructure.Data;
 using MvcAspAzure.Infrastructure.Repository;
@@ -14,7 +15,16 @@ builder.Services.AddDbContext<ShipmenDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDbConnection")));
 
 //register repository
-builder.Services.AddScoped(typeof(IRepositoryAsync<>), typeof(RepositoryAsync<>));
+builder.Services.AddScoped(typeof(IRepositoryAsync<Cargo>), typeof(RepositoryAsync<Cargo>));
+builder.Services.AddScoped(typeof(IRepositoryAsync<Driver>), typeof(RepositoryAsync<Driver>));
+builder.Services.AddScoped(typeof(IRepositoryAsync<DriverTruck>), typeof(RepositoryAsync<DriverTruck>));
+builder.Services.AddScoped(typeof(IRepositoryAsync<PlaceState>), typeof(RepositoryAsync<PlaceState>));
+builder.Services.AddScoped(typeof(IRepositoryAsync<MvcAspAzure.Domain.Entity.Route>), typeof(RepositoryAsync<MvcAspAzure.Domain.Entity.Route>));
+builder.Services.AddScoped(typeof(IRepositoryAsync<Shipment>), typeof(RepositoryAsync<Shipment>));
+builder.Services.AddScoped(typeof(IRepositoryAsync<State>), typeof(RepositoryAsync<State>));
+builder.Services.AddScoped(typeof(IRepositoryAsync<Truck>), typeof(RepositoryAsync<Truck>));
+builder.Services.AddScoped(typeof(IRepositoryAsync<Warehouse>), typeof(RepositoryAsync<Warehouse>));
+builder.Services.AddScoped(typeof(IRepositoryAsync<Contact>), typeof(RepositoryAsync<Contact>));
 
 // Add services to the container.
 //builder.Services.AddControllersWithViews();

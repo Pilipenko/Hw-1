@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using MvcAspAzure.Entity;
-using MvcAspAzure.Repository;
+using MvcAspAzure.Domain.Entity;
+using MvcAspAzure.Infrastructure.Repository;
 
 namespace MvcAspAzure.Controllers.API {
 

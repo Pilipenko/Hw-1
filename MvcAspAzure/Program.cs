@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 
-using MvcAspAzure.Data;
-using MvcAspAzure.Repository;
+using MvcAspAzure.Infrastructure.Data;
+using MvcAspAzure.Infrastructure.Repository;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,4 @@
-﻿namespace MvcAspAzure.Repository {
+﻿namespace MvcAspAzure.Infrastructure.Repository {
     public interface IRepositoryAsync<T> where T : class {
         Task<IEnumerable<T>> GetAllAsync();
         Task<T?> GetByIdAsync(int id);

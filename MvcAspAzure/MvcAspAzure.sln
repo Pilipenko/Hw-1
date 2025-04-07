@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35913.81 d17.13
+VisualStudioVersion = 17.13.35913.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAspAzure", "MvcAspAzure.csproj", "{676918F7-AD05-4DE1-8268-81953778A987}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAspAzure.Web", "MvcAspAzure.Web.csproj", "{676918F7-AD05-4DE1-8268-81953778A987}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAspAzure.Domain", "..\MvcAspAzure.Domain\MvcAspAzure.Domain.csproj", "{B0BDE41E-6E83-4805-89A6-011064DF2F1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAspAzure.Application", "..\MvcAspAzure.Application\MvcAspAzure.Application.csproj", "{6890D8AB-3549-4B30-BBBF-ACBAB1FC2BD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAspAzure.Infrastructure", "..\MvcAspAzure.Infrastructure\MvcAspAzure.Infrastructure.csproj", "{29CFA14C-9C04-4AC3-A71D-B1AA303C8CBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{676918F7-AD05-4DE1-8268-81953778A987}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{676918F7-AD05-4DE1-8268-81953778A987}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{676918F7-AD05-4DE1-8268-81953778A987}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0BDE41E-6E83-4805-89A6-011064DF2F1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0BDE41E-6E83-4805-89A6-011064DF2F1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0BDE41E-6E83-4805-89A6-011064DF2F1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0BDE41E-6E83-4805-89A6-011064DF2F1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6890D8AB-3549-4B30-BBBF-ACBAB1FC2BD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6890D8AB-3549-4B30-BBBF-ACBAB1FC2BD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6890D8AB-3549-4B30-BBBF-ACBAB1FC2BD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6890D8AB-3549-4B30-BBBF-ACBAB1FC2BD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29CFA14C-9C04-4AC3-A71D-B1AA303C8CBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29CFA14C-9C04-4AC3-A71D-B1AA303C8CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29CFA14C-9C04-4AC3-A71D-B1AA303C8CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29CFA14C-9C04-4AC3-A71D-B1AA303C8CBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

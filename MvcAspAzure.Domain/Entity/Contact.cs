@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-namespace MvcAspAzure.Entity {
+namespace MvcAspAzure.Domain.Entity {
     public sealed class Contact {
         [Key]
         public int Id { get; set; }

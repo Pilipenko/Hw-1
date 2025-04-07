@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MvcAspAzure.Entity {
+namespace MvcAspAzure.Domain.Entity {
     public sealed class Cargo {
         [Key]
         public int Id { get; set; }

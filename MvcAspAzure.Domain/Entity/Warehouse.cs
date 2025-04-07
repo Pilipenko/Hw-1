@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 
-namespace MvcAspAzure.Entity {
+namespace MvcAspAzure.Domain.Entity {
     public sealed class Warehouse {
         [Key]
         public int Id { get; set; }

@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using MvcAspAzure.Data;
+using MvcAspAzure.Infrastructure.Data;
 
-namespace MvcAspAzure.Repository {
+
+namespace MvcAspAzure.Infrastructure.Repository {
     public sealed class RepositoryAsync<T> : IRepositoryAsync<T> where T : class {
         readonly ShipmenDbContext context;
         readonly DbSet<T> dbSet;

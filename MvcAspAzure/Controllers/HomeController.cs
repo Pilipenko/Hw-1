@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MvcAspAzure.ViewModels;
+
+using MvcAspAzure.Application.ViewModels;
 
 namespace MvcAspAzure.Controllers
 {

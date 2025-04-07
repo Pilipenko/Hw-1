@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using MvcAspAzure.Entity;
+using MvcAspAzure.Domain.Entity;
 
-using Route = MvcAspAzure.Entity.Route;
+using Route = MvcAspAzure.Domain.Entity.Route;
 
-namespace MvcAspAzure.Data {
+namespace MvcAspAzure.Infrastructure.Data {
     public sealed class ShipmenDbContext: DbContext {
         public ShipmenDbContext(DbContextOptions<ShipmenDbContext> options) : base(options) { }
 

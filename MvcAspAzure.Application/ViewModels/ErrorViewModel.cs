@@ -1,4 +1,4 @@
-namespace MvcAspAzure.ViewModels {
+namespace MvcAspAzure.Application.ViewModels {
     public sealed class ErrorViewModel
     {
         public string? RequestId { get; set; }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using MvcAspAzure.Domain.Repository;
 using MvcAspAzure.Infrastructure.Data;
 
 

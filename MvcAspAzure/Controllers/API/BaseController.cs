@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using MvcAspAzure.Infrastructure.Repository;
+using MvcAspAzure.Domain.Repository;
 
 namespace MvcAspAzure.Controllers.API {
     [Route("api/[controller]")]

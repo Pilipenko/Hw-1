@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
+    <Folder Include="Handlers\Commands\" />
+    <Folder Include="Handlers\Queries\GetShipmentByIdQuery\" />
+    <Folder Include="Handlers\Queries\GetWarehouseByIdQuery\" />
   </ItemGroup>
 
   <ItemGroup>

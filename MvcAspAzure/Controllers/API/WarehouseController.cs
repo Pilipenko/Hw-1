@@ -19,7 +19,7 @@ namespace MvcAspAzure.Controllers.API {
 
         public WarehouseController(WarehouseCommandHandler handler, 
             GetWarehouseByIdHandler getByIdHandler,
-            GetAllWarehousesHandler _getAllHandler) {
+            GetAllWarehousesHandler getAllHandler) {
             _handler = handler;
             _getByIdHandler = getByIdHandler;
             _getAllHandler = getAllHandler;

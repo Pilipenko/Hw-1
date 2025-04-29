@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 using MvcAspAzure.Application.Handlers.Commands.Warehouse;
+using MvcAspAzure.Application.Handlers.Queries.AllWarehousesHandler;
+using MvcAspAzure.Application.Handlers.Queries.AllWarehousesQuery;
 using MvcAspAzure.Application.Handlers.Queries.GetWarehouseByIdHandler;
 using MvcAspAzure.Application.Handlers.Queries.WarehouseByIdQuery;
 using MvcAspAzure.Domain.Entity;
@@ -11,11 +14,15 @@ namespace MvcAspAzure.Controllers.API {
     [ApiController]
     public sealed class WarehouseController : ControllerBase {
         readonly WarehouseCommandHandler _handler;
-        readonly GetWarehouseByIdHandler _queryHandler;
+        readonly GetWarehouseByIdHandler _getByIdHandler;
+        readonly GetAllWarehousesHandler _getAllHandler;
 
-        public WarehouseController(WarehouseCommandHandler handler, GetWarehouseByIdHandler queryHandler) {
+        public WarehouseController(WarehouseCommandHandler handler, 
+            GetWarehouseByIdHandler getByIdHandler,
+            GetAllWarehousesHandler _getAllHandler) {
             _handler = handler;
-            _queryHandler = queryHandler;
+            _getByIdHandler = getByIdHandler;
+            _getAllHandler = getAllHandler;
         }
 
         [HttpPost]
@@ -41,13 +48,20 @@ namespace MvcAspAzure.Controllers.API {
 
 
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id) {
-            var shipment = await _queryHandler.Handle(new GetWarehouseByIdQuery(id));
-            if (shipment == null)
+            var warehouse = await _getByIdHandler.Handle(new GetWarehouseByIdQuery(id));
+            if (warehouse == null)
                 return NotFound();
 
-            return Ok(shipment);
+            return Ok(warehouse);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll() {
+            var shipments = await _getAllHandler.Handle(new GetAllWarehousesQuery());
+            return Ok(shipments);
         }
 
     }

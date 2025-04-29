@@ -7,12 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Handlers\Commands\" />
-    <Folder Include="Handlers\Queries\GetShipmentByIdQuery\" />
-    <Folder Include="Handlers\Queries\GetWarehouseByIdQuery\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MvcAspAzure.Domain\MvcAspAzure.Domain.csproj" />
   </ItemGroup>
 

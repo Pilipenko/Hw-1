@@ -1,25 +1,53 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using MvcAspAzure.Application.Handlers.Commands.Shipment;
+using MvcAspAzure.Application.Handlers.Queries.GetShipmentByIdHandler;
+using MvcAspAzure.Application.Handlers.Queries.ShipmentByIdQuery;
 using MvcAspAzure.Domain.Entity;
-using MvcAspAzure.Domain.Repository;
 
 namespace MvcAspAzure.Controllers.API {
 
     [Route("api/[controller]")]
     [ApiController]
     public sealed class ShipmentController : ControllerBase {
-        readonly IRepository<Shipment> repository;
+        readonly ShipmentCommandHandler _handler;
+        readonly GetShipmentByIdHandler _queryHandler;
 
-        public ShipmentController(IRepository<Shipment> repository) {
-            this.repository = repository;
+        public ShipmentController(ShipmentCommandHandler handler, GetShipmentByIdHandler queryHandler) {
+            _handler = handler;
+            _queryHandler = queryHandler;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll() => Ok(await repository.GetAll());
-
         [HttpPost]
-        public async Task<IActionResult> Create(Shipment shipment) {
-            await repository.Insert(shipment);
+        public async Task<IActionResult> Create([FromBody] CreateShipmentCommand command) {
+            var id = await _handler.Handle(command);
+            return CreatedAtAction(nameof(GetById), new { id }, null);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateShipmentCommand command) {
+            if (id != command.Id)
+                return BadRequest();
+
+            await _handler.Handle(command);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id) {
+            await _handler.Handle(new DeleteShipmentCommand { Id = id });
+            return NoContent();
+        }
+
+
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id) {
+            var shipment = await _queryHandler.Handle(new GetShipmentByIdQuery(id));
+            if (shipment == null)
+                return NotFound();
+
             return Ok(shipment);
         }
     }

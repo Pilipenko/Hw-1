@@ -4,7 +4,7 @@ using MvcAspAzure.Domain.Entity;
 
 using Route = MvcAspAzure.Domain.Entity.Route;
 
-namespace MvcAspAzure.Infrastructure.Data {
+namespace MvcAspAzure.Domain.Data {
     public sealed class ShipmenDbContext: DbContext {
         public ShipmenDbContext(DbContextOptions<ShipmenDbContext> options) : base(options) { }
 
@@ -22,19 +22,25 @@ namespace MvcAspAzure.Infrastructure.Data {
     
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             //Make Unique fields
-            modelBuilder.Entity<Truck>()
-                .HasIndex(t => t.RegistrationNumber)
-                .IsUnique();
+            modelBuilder.Entity<Shipment>(static entity => {
+                //entity.ToTable("Shipments");
 
-            modelBuilder.Entity<DriverTruck>()
-                .HasIndex(dt => new { dt.DriverId, dt.TruckId })
-                .IsUnique();
+                entity.HasKey(s => s.Id);
+                entity.HasKey(s => s.RouteId);
+                entity.HasKey(s => s.CargoId);
 
-            modelBuilder.Entity<Route>()
-                        .ToTable(t => t.HasCheckConstraint("chk_Route_DifferentWarehouses", "OriginWarehouseId <> DestinationWarehouseId"));
 
-            modelBuilder.Entity<Cargo>()
-                        .ToTable(t => t.HasCheckConstraint("chk_Cargo_DifferentContact", "SenderContactId <> RecipientContactId"));
+                //entity.HasOne(s => s.RouteId)
+                //      .WithMany(w => w.OriginWarehouse)
+                //      .HasForeignKey(s => s.RouteId);
+            });
+
+            modelBuilder.Entity<Warehouse>(entity => {
+                //entity.ToTable("Warehouses");
+
+                entity.HasKey(w => w.Id);
+                entity.HasKey(w => w.PlaceId);
+            });
         }
 
     }

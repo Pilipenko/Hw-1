@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using MvcAspAzure.Domain.Entity;
 
 namespace MvcAspAzure.Domain.Repository {
-    public interface IShipmentRepository {
+    public interface IShipmentRepository : IRepositoryAsync<Shipment> {
+        Task<IEnumerable<Shipment>> GetShipmentsByRouteIdAsync(int warehouseId);
+        Task<IEnumerable<Shipment>> GetShipmentsByCargoIdAsync(int warehouseId);
     }
 }

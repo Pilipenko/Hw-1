@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 
+using MvcAspAzure.Domain.Data;
 using MvcAspAzure.Domain.Entity;
 using MvcAspAzure.Domain.Repository;
-using MvcAspAzure.Infrastructure.Data;
 using MvcAspAzure.Infrastructure.Repository;
 
 

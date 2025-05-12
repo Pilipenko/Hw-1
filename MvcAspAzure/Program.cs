@@ -1,6 +1,7 @@
-using FluentValidation.AspNetCore;
+﻿using FluentValidation.AspNetCore;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 using MvcAspAzure.Application.Warehouse.Commands.CreateShipmentValidator;
 using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouseValidator;
@@ -46,39 +47,13 @@ c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo {
     Version = "v1",
     Description = "ASP.NET Core Web API."
     });
+
+    c.AddServer(new OpenApiServer { Url = "http://localhost:5000" });
+
+    var filePath = Path.Combine(AppContext.BaseDirectory, "swagger", "swagger.yaml");
+    c.IncludeXmlComments(filePath);
+
 });
-
-//Add autorization
-//builder.Services.AddSwaggerGen(c => {
-//    c.SwaggerDoc("v1", new OpenApiInfo {
-//        Title = "MvcAspAzure API",
-//        Version = "v1"
-//    });
-
-//    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
-//        Name = "Authorization",
-//        Type = SecuritySchemeType.ApiKey,
-//        Scheme = "Bearer",
-//        BearerFormat = "JWT",
-//        In = ParameterLocation.Header,
-//        Description = "Enter 'Bearer {token}'"
-//    });
-
-//    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-//    {
-//        {
-//            new OpenApiSecurityScheme
-//            {
-//                Reference = new OpenApiReference
-//                {
-//                    Type = ReferenceType.SecurityScheme,
-//                    Id = "Bearer"
-//                }
-//            },
-//            Array.Empty<string>()
-//        }
-//    });
-//});
 
 // Add services to the container.
 //builder.Services.AddControllersWithViews();
@@ -109,7 +84,7 @@ if (!app.Environment.IsDevelopment())
     //app.UseSwaggerUI();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shipment API v1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.yaml", "Warehouse & Shipment API v1");
         c.RoutePrefix = string.Empty;
     });
 }
@@ -118,6 +93,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.UseAuthorization();
 

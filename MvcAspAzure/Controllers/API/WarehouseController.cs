@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using MvcAspAzure.Application.Handlers.Commands.Warehouse;
-using MvcAspAzure.Application.Handlers.Queries.AllWarehousesHandler;
-using MvcAspAzure.Application.Handlers.Queries.AllWarehousesQuery;
-using MvcAspAzure.Application.Handlers.Queries.GetWarehouseByIdHandler;
-using MvcAspAzure.Application.Handlers.Queries.WarehouseByIdQuery;
+using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse;
+using MvcAspAzure.Application.Warehouse.Commands.DeleteWarehouse;
+using MvcAspAzure.Application.Warehouse.Commands.UpdateWarehouse;
+using MvcAspAzure.Application.Warehouse.Queries.GetAllWarehouses;
+using MvcAspAzure.Application.Warehouse.Queries.GetWarehouseById;
 using MvcAspAzure.Domain.Entity;
 
 namespace MvcAspAzure.Controllers.API {
@@ -13,21 +13,28 @@ namespace MvcAspAzure.Controllers.API {
     [Route("api/[controller]")]
     [ApiController]
     public sealed class WarehouseController : ControllerBase {
-        readonly WarehouseCommandHandler _handler;
+        readonly UpdateWarehouseCommandHandler _updatehandler;
+        readonly CreateWarehouseCommandHandler _createHandler;
+        readonly DeleteWarehouseCommandHandler _deleteHandler;
         readonly GetWarehouseByIdHandler _getByIdHandler;
         readonly GetAllWarehousesHandler _getAllHandler;
 
-        public WarehouseController(WarehouseCommandHandler handler, 
+        public WarehouseController(
+            UpdateWarehouseCommandHandler updateHandler,
+            CreateWarehouseCommandHandler createHandler,
+            DeleteWarehouseCommandHandler deleteHandler,
             GetWarehouseByIdHandler getByIdHandler,
             GetAllWarehousesHandler getAllHandler) {
-            _handler = handler;
+            _updatehandler = updateHandler;
+            _createHandler = createHandler;
+            _deleteHandler = deleteHandler;
             _getByIdHandler = getByIdHandler;
             _getAllHandler = getAllHandler;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateWarehouseCommand command) {
-            var id = await _handler.Handle(command);
+            var id = await _createHandler.Handle(command);
             return CreatedAtAction(nameof(GetById), new { id }, null);
         }
 
@@ -36,13 +43,13 @@ namespace MvcAspAzure.Controllers.API {
             if (id != command.Id)
                 return BadRequest();
 
-            await _handler.Handle(command);
+            await _updatehandler.Handle(command);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id) {
-            await _handler.Handle(new DeleteWarehouseCommand { Id = id });
+            await _deleteHandler.Handle(new DeleteWarehouseCommand { Id = id });
             return NoContent();
         }
 

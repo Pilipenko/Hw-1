@@ -14,4 +14,8 @@
     <ProjectReference Include="..\MvcAspAzure.Domain\MvcAspAzure.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Handlers\" />
+  </ItemGroup>
+
 </Project>

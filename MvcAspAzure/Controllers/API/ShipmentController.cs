@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using MvcAspAzure.Application.Handlers.Commands.Shipment;
-using MvcAspAzure.Application.Handlers.Queries.AllShipmentsHandler;
-using MvcAspAzure.Application.Handlers.Queries.AllShipmentsQuery;
-using MvcAspAzure.Application.Handlers.Queries.GetShipmentByIdHandler;
-using MvcAspAzure.Application.Handlers.Queries.ShipmentByIdQuery;
+using MvcAspAzure.Application.Shipment.Commands.CreateShipment;
+using MvcAspAzure.Application.Shipment.Commands.DeleteShipment;
+using MvcAspAzure.Application.Shipment.Commands.UpdateShipment;
+using MvcAspAzure.Application.Shipment.Queries.GetAllShipments;
+using MvcAspAzure.Application.Shipment.Queries.GetShipmentById;
 using MvcAspAzure.Domain.Entity;
 
 namespace MvcAspAzure.Controllers.API {
@@ -13,14 +13,21 @@ namespace MvcAspAzure.Controllers.API {
     [Route("api/[controller]")]
     [ApiController]
     public sealed class ShipmentController : ControllerBase {
-        readonly ShipmentCommandHandler _handler;
+        readonly UpdateShipmentCommandHandler _updateHandler;
+        readonly CreateShipmentCommandHandler _createHandler;
+        readonly DeleteShipmentCommandHandler _deleteHandler;
         readonly GetShipmentByIdHandler _queryHandler;
         readonly GetAllShipmentsHandler _getAllHandler;
 
-        public ShipmentController(ShipmentCommandHandler handler, 
+        public ShipmentController(
+            UpdateShipmentCommandHandler updateHandler,
+            CreateShipmentCommandHandler createHandler,
+            DeleteShipmentCommandHandler deleteHandler,
             GetShipmentByIdHandler queryHandler,
             GetAllShipmentsHandler getAllHandler) {
-            _handler = handler;
+            _updateHandler = updateHandler;
+            _createHandler = createHandler;
+            _deleteHandler = deleteHandler;
             _queryHandler = queryHandler;
             _getAllHandler = getAllHandler;
         }
@@ -30,7 +37,7 @@ namespace MvcAspAzure.Controllers.API {
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateShipmentCommand command) {
-            var id = await _handler.Handle(command);
+            var id = await _createHandler.Handle(command);
             return CreatedAtAction(nameof(GetById), new { id }, null);
         }
 
@@ -39,13 +46,13 @@ namespace MvcAspAzure.Controllers.API {
             if (id != command.Id)
                 return BadRequest();
 
-            await _handler.Handle(command);
+            await _updateHandler.Handle(command);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id) {
-            await _handler.Handle(new DeleteShipmentCommand { Id = id });
+            await _deleteHandler.Handle(new DeleteShipmentCommand { Id = id });
             return NoContent();
         }
 
@@ -66,10 +73,5 @@ namespace MvcAspAzure.Controllers.API {
             var shipments = await _getAllHandler.Handle(new GetAllShipmentsQuery());
             return Ok(shipments);
         }
-
-
-
-
-
     }
 }

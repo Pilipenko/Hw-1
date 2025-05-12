@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
-using MvcAspAzure.Application.Handlers.Queries.AllWarehousesHandler;
-using MvcAspAzure.Application.Handlers.Queries.GetWarehouseByIdHandler;
+using MvcAspAzure.Application.Warehouse.Queries.GetAllWarehouses;
+using MvcAspAzure.Application.Warehouse.Queries.GetWarehouseById;
 using MvcAspAzure.Domain.Data;
 using MvcAspAzure.Domain.Entity;
 using MvcAspAzure.Domain.Repository;

@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using MvcAspAzure.Application.Services;
 using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse;
 using MvcAspAzure.Application.Warehouse.Commands.DeleteWarehouse;
 using MvcAspAzure.Application.Warehouse.Commands.UpdateWarehouse;
@@ -18,24 +21,41 @@ namespace MvcAspAzure.Controllers.API {
         readonly DeleteWarehouseCommandHandler _deleteHandler;
         readonly GetWarehouseByIdHandler _getByIdHandler;
         readonly GetAllWarehousesHandler _getAllHandler;
-
+        readonly WarehouseService _warehouseService;
+        readonly IValidator<CreateWarehouseCommand> _validator;
         public WarehouseController(
             UpdateWarehouseCommandHandler updateHandler,
             CreateWarehouseCommandHandler createHandler,
             DeleteWarehouseCommandHandler deleteHandler,
             GetWarehouseByIdHandler getByIdHandler,
-            GetAllWarehousesHandler getAllHandler) {
+            GetAllWarehousesHandler getAllHandler,
+            WarehouseService shipmentService,
+            IValidator<CreateWarehouseCommand> validator) {
             _updatehandler = updateHandler;
             _createHandler = createHandler;
             _deleteHandler = deleteHandler;
             _getByIdHandler = getByIdHandler;
             _getAllHandler = getAllHandler;
+            _warehouseService = shipmentService;
+            _validator = validator;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateWarehouseCommand command) {
-            var id = await _createHandler.Handle(command);
-            return CreatedAtAction(nameof(GetById), new { id }, null);
+            var validationResult = await _validator.ValidateAsync(command);
+            if (!validationResult.IsValid) {
+                foreach (var error in validationResult.Errors)
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+
+                return ValidationProblem(ModelState);
+            }
+
+            var result = await _warehouseService.CreateWarehouseAsync(command);
+
+            if (!result.Success)
+                return BadRequest(result.Errors);
+            return CreatedAtAction(nameof(GetById), new { id = command.Id }, null);
         }
 
         [HttpPut("{id}")]
@@ -58,11 +78,17 @@ namespace MvcAspAzure.Controllers.API {
         [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id) {
-            var warehouse = await _getByIdHandler.Handle(new GetWarehouseByIdQuery(id));
-            if (warehouse == null)
+            var shipment = await _warehouseService.GetByIdAsync(id);
+            if (shipment == null)
                 return NotFound();
 
-            return Ok(warehouse);
+            return Ok(shipment);
+
+            //var warehouse = await _getByIdHandler.Handle(new GetWarehouseByIdQuery(id));
+            //if (warehouse == null)
+            //    return NotFound();
+
+            //return Ok(warehouse);
         }
 
         [HttpGet]

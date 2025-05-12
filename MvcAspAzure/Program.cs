@@ -1,6 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using FluentValidation.AspNetCore;
 
+using Microsoft.EntityFrameworkCore;
+
+using MvcAspAzure.Application.Warehouse.Commands.CreateShipmentValidator;
+using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouseValidator;
 using MvcAspAzure.Application.Warehouse.Queries.GetAllWarehouses;
 using MvcAspAzure.Application.Warehouse.Queries.GetWarehouseById;
 using MvcAspAzure.Domain.Data;
@@ -80,7 +83,9 @@ builder.Services.AddSwaggerGen();
 
 // Add services to the container.
 //builder.Services.AddControllersWithViews();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+        .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateShipmentCommandValidator>())
+        .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateWarehouseCommandValidator>());
 
 //TODO: Add CORS policy....?
 builder.Services.AddCors(options => {

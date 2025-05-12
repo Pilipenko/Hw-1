@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using MvcAspAzure.Application.Services;
 using MvcAspAzure.Application.Shipment.Commands.CreateShipment;
 using MvcAspAzure.Application.Shipment.Commands.DeleteShipment;
 using MvcAspAzure.Application.Shipment.Commands.UpdateShipment;
 using MvcAspAzure.Application.Shipment.Queries.GetAllShipments;
 using MvcAspAzure.Application.Shipment.Queries.GetShipmentById;
+using MvcAspAzure.Application.Warehouse.Commands.CreateShipmentValidator;
 using MvcAspAzure.Domain.Entity;
 
 namespace MvcAspAzure.Controllers.API {
@@ -16,20 +20,26 @@ namespace MvcAspAzure.Controllers.API {
         readonly UpdateShipmentCommandHandler _updateHandler;
         readonly CreateShipmentCommandHandler _createHandler;
         readonly DeleteShipmentCommandHandler _deleteHandler;
-        readonly GetShipmentByIdHandler _queryHandler;
+        readonly GetShipmentByIdHandler _getByIdHandler;
         readonly GetAllShipmentsHandler _getAllHandler;
+        readonly ShipmentService _shipmentService;
+        readonly IValidator<CreateShipmentCommand> _validator;
 
         public ShipmentController(
             UpdateShipmentCommandHandler updateHandler,
             CreateShipmentCommandHandler createHandler,
             DeleteShipmentCommandHandler deleteHandler,
-            GetShipmentByIdHandler queryHandler,
-            GetAllShipmentsHandler getAllHandler) {
+            GetShipmentByIdHandler getByIdHandler,
+            GetAllShipmentsHandler getAllHandler,
+            ShipmentService shipmentService,
+            IValidator<CreateShipmentCommand> validator) {
             _updateHandler = updateHandler;
             _createHandler = createHandler;
             _deleteHandler = deleteHandler;
-            _queryHandler = queryHandler;
+            _getByIdHandler = getByIdHandler;
             _getAllHandler = getAllHandler;
+            _shipmentService= shipmentService;
+            _validator = validator;
         }
 
 
@@ -37,8 +47,19 @@ namespace MvcAspAzure.Controllers.API {
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateShipmentCommand command) {
-            var id = await _createHandler.Handle(command);
-            return CreatedAtAction(nameof(GetById), new { id }, null);
+            var validationResult = await _validator.ValidateAsync(command);
+            if (!validationResult.IsValid) {
+                foreach (var error in validationResult.Errors)
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+
+                return ValidationProblem(ModelState);
+            }
+
+            var result = await _shipmentService.CreateShipmentAsync(command);
+
+            if (!result.Success)
+                return BadRequest(result.Errors);
+            return CreatedAtAction(nameof(GetById), new { id = command.Id }, null);
         }
 
         [HttpPut("{id}")]
@@ -61,7 +82,7 @@ namespace MvcAspAzure.Controllers.API {
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id) {
-            var shipment = await _queryHandler.Handle(new GetShipmentByIdQuery(id));
+            var shipment = await _shipmentService.GetByIdAsync(id);
             if (shipment == null)
                 return NotFound();
 

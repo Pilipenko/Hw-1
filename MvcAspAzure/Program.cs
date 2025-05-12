@@ -38,16 +38,15 @@ builder.Services.AddScoped<GetWarehouseByIdHandler>();
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+//builder.Services.AddSwaggerGen();
 //add description
-//builder.Services.AddSwaggerGen(c => {
-//    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo {
-//        Title = "MvcAspAzure API",
-//        Version = "v1",
-//        Description = "ASP.NET Core Web API."
-//    });
-//});
+builder.Services.AddSwaggerGen(c => {
+c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo {
+    Title = "MvcAspAzure API",
+    Version = "v1",
+    Description = "ASP.NET Core Web API."
+    });
+});
 
 //Add autorization
 //builder.Services.AddSwaggerGen(c => {
@@ -107,7 +106,12 @@ if (!app.Environment.IsDevelopment())
 
     //Middleware
     app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shipment API v1");
+        c.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();

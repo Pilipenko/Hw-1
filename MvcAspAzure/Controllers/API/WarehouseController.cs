@@ -75,14 +75,13 @@ namespace MvcAspAzure.Controllers.API {
 
 
 
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id) {
-            var shipment = await _warehouseService.GetByIdAsync(id);
-            if (shipment == null)
+            var warehouse = await _warehouseService.GetByIdAsync(id);
+            if (warehouse == null)
                 return NotFound();
 
-            return Ok(shipment);
+            return Ok(warehouse);
 
             //var warehouse = await _getByIdHandler.Handle(new GetWarehouseByIdQuery(id));
             //if (warehouse == null)
@@ -93,8 +92,8 @@ namespace MvcAspAzure.Controllers.API {
 
         [HttpGet]
         public async Task<IActionResult> GetAll() {
-            var shipments = await _getAllHandler.Handle(new GetAllWarehousesQuery());
-            return Ok(shipments);
+            var warehouses = await _getAllHandler.Handle(new GetAllWarehousesQuery());
+            return Ok(warehouses);
         }
 
     }

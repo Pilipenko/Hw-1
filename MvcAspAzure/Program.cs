@@ -10,6 +10,9 @@ using FluentValidation.AspNetCore;
 using MvcAspAzure.Application.Shipment.Commands.CreateShipment;
 using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse;
 using MvcAspAzure.Domain.Data;
+using MvcAspAzure.Application.Warehouse.Commands.UpdateWarehouse;
+using MvcAspAzure.Application.Warehouse.Commands.DeleteWarehouse;
+using MvcAspAzure.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,10 +25,19 @@ builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
 
 // ---------- Application Handlers ----------
-builder.Services.AddScoped<GetAllWarehousesHandler>();
-builder.Services.AddScoped<GetWarehouseByIdHandler>();
 builder.Services.AddScoped<GetAllShipmentsHandler>();
 builder.Services.AddScoped<GetShipmentByIdHandler>();
+
+
+builder.Services.AddScoped<GetAllWarehousesHandler>();
+builder.Services.AddScoped<GetWarehouseByIdHandler>();
+builder.Services.AddScoped<UpdateWarehouseCommandHandler>();
+builder.Services.AddScoped<CreateWarehouseCommandHandler>();
+builder.Services.AddScoped<DeleteWarehouseCommandHandler>();
+builder.Services.AddScoped<GetWarehouseByIdHandler>();
+builder.Services.AddScoped<WarehouseService>();
+builder.Services.AddScoped<CreateWarehouseCommandValidator>();
+
 
 // ---------- Swagger ----------
 builder.Services.AddEndpointsApiExplorer();
@@ -84,7 +96,7 @@ app.UseSwagger(c => {
 });
 
 app.UseSwaggerUI(c => {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MvcAspAzure API V1");
+    c.SwaggerEndpoint("/swagger/swagger.json", "MvcAspAzure API V1");
 });
 
 // ---------- Controller Mapping ----------
@@ -99,6 +111,5 @@ app.MapControllerRoute(
 app.Run();
 
 
-//https://localhost:7105/swagger
 
 //http://localhost:5097/swagger

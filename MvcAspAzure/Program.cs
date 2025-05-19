@@ -1,107 +1,104 @@
-﻿using FluentValidation.AspNetCore;
-
+﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-
-using MvcAspAzure.Application.Warehouse.Commands.CreateShipmentValidator;
-using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouseValidator;
+using MvcAspAzure.Application.Shipment.Queries.GetAllShipments;
+using MvcAspAzure.Application.Shipment.Queries.GetShipmentById;
 using MvcAspAzure.Application.Warehouse.Queries.GetAllWarehouses;
 using MvcAspAzure.Application.Warehouse.Queries.GetWarehouseById;
-using MvcAspAzure.Domain.Data;
-using MvcAspAzure.Domain.Entity;
 using MvcAspAzure.Domain.Repository;
-using MvcAspAzure.Infrastructure.Repository;
-
+using FluentValidation.AspNetCore;
+using MvcAspAzure.Application.Shipment.Commands.CreateShipment;
+using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse;
+using MvcAspAzure.Domain.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//connect to DB
-//builder.Services.AddDbContext<ShipmenDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSqlConnection")));
+// ---------- DB Context ----------
 builder.Services.AddDbContext<ShipmenDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDbConnection")));
 
-//register repository
-builder.Services.AddScoped(typeof(IRepositoryAsync<Cargo>), typeof(RepositoryAsync<Cargo>));
-builder.Services.AddScoped(typeof(IRepositoryAsync<Driver>), typeof(RepositoryAsync<Driver>));
-builder.Services.AddScoped(typeof(IRepositoryAsync<DriverTruck>), typeof(RepositoryAsync<DriverTruck>));
-builder.Services.AddScoped(typeof(IRepositoryAsync<PlaceState>), typeof(RepositoryAsync<PlaceState>));
-builder.Services.AddScoped(typeof(IRepositoryAsync<MvcAspAzure.Domain.Entity.Route>), typeof(RepositoryAsync<MvcAspAzure.Domain.Entity.Route>));
-builder.Services.AddScoped(typeof(IRepositoryAsync<State>), typeof(RepositoryAsync<State>));
-builder.Services.AddScoped(typeof(IRepositoryAsync<Truck>), typeof(RepositoryAsync<Truck>));
-builder.Services.AddScoped(typeof(IRepositoryAsync<Contact>), typeof(RepositoryAsync<Contact>));
+// ---------- Repositories ----------
+builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
 
-builder.Services.AddScoped(typeof(IRepositoryAsync<Warehouse>), typeof(RepositoryAsync<Warehouse>));
-builder.Services.AddScoped(typeof(IRepositoryAsync<Shipment>), typeof(RepositoryAsync<Shipment>));
-
+// ---------- Application Handlers ----------
 builder.Services.AddScoped<GetAllWarehousesHandler>();
 builder.Services.AddScoped<GetWarehouseByIdHandler>();
+builder.Services.AddScoped<GetAllShipmentsHandler>();
+builder.Services.AddScoped<GetShipmentByIdHandler>();
 
-
+// ---------- Swagger ----------
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
-//add description
 builder.Services.AddSwaggerGen(c => {
-c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo {
-    Title = "MvcAspAzure API",
-    Version = "v1",
-    Description = "ASP.NET Core Web API."
+    c.SwaggerDoc("v1", new OpenApiInfo {
+        Title = "MvcAspAzure API",
+        Version = "v1",
+        Description = "ASP.NET Core Web API."
     });
 
-    c.AddServer(new OpenApiServer { Url = "http://localhost:5000" });
-
-    var filePath = Path.Combine(AppContext.BaseDirectory, "swagger", "swagger.yaml");
-    c.IncludeXmlComments(filePath);
-
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath)) {
+        c.IncludeXmlComments(xmlPath);
+    }
 });
 
-// Add services to the container.
-//builder.Services.AddControllersWithViews();
+// ---------- Fluent Validation ----------
 builder.Services.AddControllers()
-        .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateShipmentCommandValidator>())
-        .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateWarehouseCommandValidator>());
+    .AddFluentValidation(fv => {
+        fv.RegisterValidatorsFromAssemblyContaining<CreateShipmentCommandValidator>();
+        fv.RegisterValidatorsFromAssemblyContaining<CreateWarehouseCommandValidator>();
+    });
 
-//TODO: Add CORS policy....?
+// ---------- CORS ----------
 builder.Services.AddCors(options => {
-    options.AddPolicy("AllowFrontend",
-        policy => policy.WithOrigins("http://localhost:3000")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
+    options.AddPolicy("AllowFrontend", policy =>
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
+// ---------- Middleware ----------
+if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-
-
-    //Middleware
-    app.UseSwagger();
-    //app.UseSwaggerUI();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.yaml", "Warehouse & Shipment API v1");
-        c.RoutePrefix = string.Empty;
-    });
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
+app.UseCors("AllowFrontend");
+app.UseAuthorization();
+
+// ---------- Swagger UI ----------
+app.UseSwagger(c => {
+    c.PreSerializeFilters.Add((swaggerDoc, httpReq) => {
+        if (httpReq.Query.ContainsKey("tokenizeHost")) {
+            swaggerDoc.Servers = new List<OpenApiServer> {
+                new OpenApiServer { Url = "${serviceHost}" }
+            };
+        }
+    });
 });
 
-app.UseAuthorization();
+app.UseSwaggerUI(c => {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MvcAspAzure API V1");
+});
+
+// ---------- Controller Mapping ----------
+app.UseEndpoints(endpoints => {
+    endpoints.MapControllers();
+});
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+
+//https://localhost:7105/swagger
+
+//http://localhost:5097/swagger

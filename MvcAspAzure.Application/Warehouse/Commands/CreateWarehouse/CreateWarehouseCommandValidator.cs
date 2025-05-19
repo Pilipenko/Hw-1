@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
 
-using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse;
-
-namespace MvcAspAzure.Application.Warehouse.Commands.CreateWarehouseValidator {
+namespace MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse {
     public sealed class CreateWarehouseCommandValidator : AbstractValidator<CreateWarehouseCommand> {
         public CreateWarehouseCommandValidator() {
             RuleFor(w => w.PlaceId)

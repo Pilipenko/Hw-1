@@ -9,7 +9,6 @@ using MvcAspAzure.Application.Shipment.Commands.DeleteShipment;
 using MvcAspAzure.Application.Shipment.Commands.UpdateShipment;
 using MvcAspAzure.Application.Shipment.Queries.GetAllShipments;
 using MvcAspAzure.Application.Shipment.Queries.GetShipmentById;
-using MvcAspAzure.Application.Warehouse.Commands.CreateShipmentValidator;
 using MvcAspAzure.Domain.Entity;
 
 namespace MvcAspAzure.Controllers.API {

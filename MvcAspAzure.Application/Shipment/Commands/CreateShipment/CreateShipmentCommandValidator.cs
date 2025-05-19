@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
 
-using MvcAspAzure.Application.Shipment.Commands.CreateShipment;
-
-namespace MvcAspAzure.Application.Warehouse.Commands.CreateShipmentValidator {
+namespace MvcAspAzure.Application.Shipment.Commands.CreateShipment {
     public sealed class CreateShipmentCommandValidator : AbstractValidator<CreateShipmentCommand> {
         public CreateShipmentCommandValidator() {
             RuleFor(x => x.StartData)
@@ -14,7 +12,6 @@ namespace MvcAspAzure.Application.Warehouse.Commands.CreateShipmentValidator {
 
             RuleFor(x => x.CargoId)
                 .GreaterThan(0).WithMessage("CargoId is required.");
-
 
             //RuleFor(s => s.StartData)
             //    .NotEmpty().WithMessage("StartData is required.")

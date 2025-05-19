@@ -5,7 +5,7 @@ using MvcAspAzure.Domain.Repository;
 
 
 namespace MvcAspAzure.Infrastructure.Repository {
-    public sealed class RepositoryAsync<T> : IRepositoryAsync<T> where T : class {
+    public abstract class RepositoryAsync<T> : IRepositoryAsync<T> where T : class {
         readonly ShipmenDbContext context;
         readonly DbSet<T> dbSet;
 

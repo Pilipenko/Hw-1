@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using MvcAspAzure.Application.Services;
+using MvcAspAzure.Application.Services.Interfaces;
 using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse;
 using MvcAspAzure.Application.Warehouse.Commands.DeleteWarehouse;
 using MvcAspAzure.Application.Warehouse.Commands.UpdateWarehouse;
@@ -16,27 +17,15 @@ namespace MvcAspAzure.Controllers.API {
     [Route("api/[controller]")]
     [ApiController]
     public sealed class WarehouseController : ControllerBase {
-        readonly UpdateWarehouseCommandHandler _updatehandler;
-        readonly CreateWarehouseCommandHandler _createHandler;
-        readonly DeleteWarehouseCommandHandler _deleteHandler;
-        readonly GetWarehouseByIdHandler _getByIdHandler;
-        readonly GetAllWarehousesHandler _getAllHandler;
+        readonly IWarehouseOperations _warehouseOperations;
         readonly WarehouseService _warehouseService;
         readonly IValidator<CreateWarehouseCommand> _validator;
         public WarehouseController(
-            UpdateWarehouseCommandHandler updateHandler,
-            CreateWarehouseCommandHandler createHandler,
-            DeleteWarehouseCommandHandler deleteHandler,
-            GetWarehouseByIdHandler getByIdHandler,
-            GetAllWarehousesHandler getAllHandler,
-            WarehouseService shipmentService,
+            IWarehouseOperations warehouseOperations,
+            WarehouseService warehouseService,
             IValidator<CreateWarehouseCommand> validator) {
-            _updatehandler = updateHandler;
-            _createHandler = createHandler;
-            _deleteHandler = deleteHandler;
-            _getByIdHandler = getByIdHandler;
-            _getAllHandler = getAllHandler;
-            _warehouseService = shipmentService;
+            _warehouseOperations = warehouseOperations;
+            _warehouseService = warehouseService;
             _validator = validator;
         }
 
@@ -63,13 +52,13 @@ namespace MvcAspAzure.Controllers.API {
             if (id != command.Id)
                 return BadRequest();
 
-            await _updatehandler.Handle(command);
+            await _warehouseOperations.UpdateAsync(command);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id) {
-            await _deleteHandler.Handle(new DeleteWarehouseCommand { Id = id });
+            await _warehouseOperations.DeleteAsync(id);
             return NoContent();
         }
 
@@ -82,17 +71,11 @@ namespace MvcAspAzure.Controllers.API {
                 return NotFound();
 
             return Ok(warehouse);
-
-            //var warehouse = await _getByIdHandler.Handle(new GetWarehouseByIdQuery(id));
-            //if (warehouse == null)
-            //    return NotFound();
-
-            //return Ok(warehouse);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll() {
-            var warehouses = await _getAllHandler.Handle(new GetAllWarehousesQuery());
+            var warehouses = await _warehouseOperations.GetAllAsync();
             return Ok(warehouses);
         }
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using MvcAspAzure.Application.Services;
+using MvcAspAzure.Application.Services.Interfaces;
 using MvcAspAzure.Application.Shipment.Commands.CreateShipment;
 using MvcAspAzure.Application.Shipment.Commands.DeleteShipment;
 using MvcAspAzure.Application.Shipment.Commands.UpdateShipment;
@@ -16,27 +17,15 @@ namespace MvcAspAzure.Controllers.API {
     [Route("api/[controller]")]
     [ApiController]
     public sealed class ShipmentController : ControllerBase {
-        readonly UpdateShipmentCommandHandler _updateHandler;
-        readonly CreateShipmentCommandHandler _createHandler;
-        readonly DeleteShipmentCommandHandler _deleteHandler;
-        readonly GetShipmentByIdHandler _getByIdHandler;
-        readonly GetAllShipmentsHandler _getAllHandler;
+        readonly IShipmentOperations _shipmentOperations;
         readonly ShipmentService _shipmentService;
         readonly IValidator<CreateShipmentCommand> _validator;
 
         public ShipmentController(
-            UpdateShipmentCommandHandler updateHandler,
-            CreateShipmentCommandHandler createHandler,
-            DeleteShipmentCommandHandler deleteHandler,
-            GetShipmentByIdHandler getByIdHandler,
-            GetAllShipmentsHandler getAllHandler,
+            IShipmentOperations shipmentOperations,
             ShipmentService shipmentService,
             IValidator<CreateShipmentCommand> validator) {
-            _updateHandler = updateHandler;
-            _createHandler = createHandler;
-            _deleteHandler = deleteHandler;
-            _getByIdHandler = getByIdHandler;
-            _getAllHandler = getAllHandler;
+            _shipmentOperations = shipmentOperations;
             _shipmentService= shipmentService;
             _validator = validator;
         }
@@ -66,13 +55,13 @@ namespace MvcAspAzure.Controllers.API {
             if (id != command.Id)
                 return BadRequest();
 
-            await _updateHandler.Handle(command);
+            await _shipmentOperations.UpdateAsync(command);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id) {
-            await _deleteHandler.Handle(new DeleteShipmentCommand { Id = id });
+            await _shipmentOperations.DeleteAsync(id );
             return NoContent();
         }
 
@@ -90,7 +79,7 @@ namespace MvcAspAzure.Controllers.API {
 
         [HttpGet]
         public async Task<IActionResult> GetAll() {
-            var shipments = await _getAllHandler.Handle(new GetAllShipmentsQuery());
+            var shipments = await _shipmentOperations.GetAllAsync();
             return Ok(shipments);
         }
     }

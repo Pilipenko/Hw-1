@@ -13,30 +13,53 @@ using MvcAspAzure.Domain.Data;
 using MvcAspAzure.Application.Warehouse.Commands.UpdateWarehouse;
 using MvcAspAzure.Application.Warehouse.Commands.DeleteWarehouse;
 using MvcAspAzure.Application.Services;
+using MvcAspAzure.Application.Shipment.Commands.DeleteShipment;
+using MvcAspAzure.Application.Shipment.Commands.UpdateShipment;
+using MvcAspAzure.Infrastructure.Repository;
+using MvcAspAzure.Application.Services.Interfaces;
+using MvcAspAzure.Application.Services.Operations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ---------- DB Context ----------
 builder.Services.AddDbContext<ShipmenDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDbConnection")));
-
+//builder.Services.AddDbContextFactory<ShipmenDbContext>();
 // ---------- Repositories ----------
-builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
+builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 
-// ---------- Application Handlers ----------
+// ---------- Services ----------
+builder.Services.AddScoped<ShipmentService>();
+builder.Services.AddScoped<WarehouseService>();
+
+builder.Services.AddScoped<IWarehouseOperations, WarehouseOperations>();
+builder.Services.AddScoped<IShipmentOperations, ShipmentOperations>();
+
+// ---------- Shipment Commands ----------
+builder.Services.AddScoped<CreateShipmentCommandHandler>();
+builder.Services.AddScoped<CreateShipmentCommandValidator>();
+
+builder.Services.AddScoped<DeleteShipmentCommandHandler>();
+
+builder.Services.AddScoped<UpdateShipmentCommandHandler>();
+
+// ---------- Shipment Queries ----------
 builder.Services.AddScoped<GetAllShipmentsHandler>();
 builder.Services.AddScoped<GetShipmentByIdHandler>();
 
+// ---------- Warehouse Commands ----------
+builder.Services.AddScoped<CreateWarehouseCommandHandler>();
+builder.Services.AddScoped<CreateWarehouseCommandValidator>();
 
+builder.Services.AddScoped<DeleteWarehouseCommandHandler>();
+
+builder.Services.AddScoped<UpdateWarehouseCommandHandler>();
+
+// ---------- Warehouse Queries ----------
 builder.Services.AddScoped<GetAllWarehousesHandler>();
 builder.Services.AddScoped<GetWarehouseByIdHandler>();
-builder.Services.AddScoped<UpdateWarehouseCommandHandler>();
-builder.Services.AddScoped<CreateWarehouseCommandHandler>();
-builder.Services.AddScoped<DeleteWarehouseCommandHandler>();
-builder.Services.AddScoped<GetWarehouseByIdHandler>();
-builder.Services.AddScoped<WarehouseService>();
-builder.Services.AddScoped<CreateWarehouseCommandValidator>();
+
 
 
 // ---------- Swagger ----------

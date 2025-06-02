@@ -8,16 +8,16 @@ namespace MvcAspAzure.Domain.Data {
     public sealed class ShipmenDbContext: DbContext {
         public ShipmenDbContext(DbContextOptions<ShipmenDbContext> options) : base(options) { }
 
-        public DbSet<Contact> Contacts { get; set; }
-        public DbSet<State> States { get; set; }
-        public DbSet<PlaceState> PlaceStates { get; set; }
-        public DbSet<Warehouse> Warehouses { get; set; }
-        public DbSet<Driver> Drivers { get; set; }
-        public DbSet<Truck> Trucks { get; set; }
-        public DbSet<DriverTruck> DriverTrucks { get; set; }
-        public DbSet<Route> Routes { get; set; }
-        public DbSet<Shipment> Shipments { get; set; }
-        public DbSet<Cargo> Cargos { get; set; }
+        public DbSet<Contact> Contact { get; set; }
+        public DbSet<State> State { get; set; }
+        public DbSet<PlaceState> PlaceState { get; set; }
+        public DbSet<Warehouse> Warehouse { get; set; }
+        public DbSet<Driver> Driver { get; set; }
+        public DbSet<Truck> Truck { get; set; }
+        public DbSet<DriverTruck> DriverTruck { get; set; }
+        public DbSet<Route> Route { get; set; }
+        public DbSet<Shipment> Shipment { get; set; }
+        public DbSet<Cargo> Cargo { get; set; }
 
     
         protected override void OnModelCreating(ModelBuilder modelBuilder) {

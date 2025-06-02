@@ -14,7 +14,7 @@ namespace MvcAspAzure.Domain.Repository {
         }
 
         public async Task<IEnumerable<Warehouse>> GetWarehouseByPlaceIdAsync(int warehouseId) {
-            return await _context.Warehouses
+            return await _context.Warehouse
                 .Where(w => w.PlaceId == warehouseId)
                 .ToListAsync();
         }

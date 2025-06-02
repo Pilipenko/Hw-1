@@ -16,6 +16,7 @@ namespace MvcAspAzure.Infrastructure.Repository {
 
         public async Task<IEnumerable<T>> GetAllAsync() => await dbSet.ToListAsync();
 
+        //public Task<T?> GetByIdAsync(int id) => Task.FromResult(dbSet.Find(id));
         public async Task<T?> GetByIdAsync(int id) => await dbSet.FindAsync(id);
 
         public async Task<T> InsertAsync(T entity) {

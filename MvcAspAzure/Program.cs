@@ -57,8 +57,8 @@ builder.Services.AddScoped<DeleteWarehouseCommandHandler>();
 builder.Services.AddScoped<UpdateWarehouseCommandHandler>();
 
 // ---------- Warehouse Queries ----------
-builder.Services.AddScoped<GetAllWarehousesHandler>();
-builder.Services.AddScoped<GetWarehouseByIdHandler>();
+builder.Services.AddTransient<GetAllWarehousesHandler>();
+builder.Services.AddTransient<GetWarehouseByIdHandler>();
 
 
 

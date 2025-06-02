@@ -13,13 +13,13 @@ namespace MvcAspAzure.Domain.Repository {
         }
 
         public async Task<IEnumerable<Shipment>> GetShipmentsByRouteIdAsync(int warehouseId) {
-            return await _context.Shipments
+            return await _context.Shipment
                 .Where(s => s.RouteId == warehouseId)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<Shipment>> GetShipmentsByCargoIdAsync(int warehouseId) {
-            return await _context.Shipments
+            return await _context.Shipment
                 .Where(s => s.CargoId == warehouseId)
                 .ToListAsync();
         }

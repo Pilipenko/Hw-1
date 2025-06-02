@@ -14,7 +14,6 @@ namespace MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse {
             var warehouse = new Domain.Entity.Warehouse {
                 Id = command.Id,
                 PlaceId = command.PlaceId,
-                Place = command.Place,
             };
             var createdWarehouse = await _warehouseRepository.InsertAsync(warehouse);
             return createdWarehouse.Id;

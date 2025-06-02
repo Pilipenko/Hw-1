@@ -9,8 +9,5 @@ namespace MvcAspAzure.Domain.Entity {
 
         [Required]
         public int PlaceId { get; set; }
-
-        [ForeignKey(nameof(PlaceId))]
-        public PlaceState Place { get; set; } = null!;
     }
 }

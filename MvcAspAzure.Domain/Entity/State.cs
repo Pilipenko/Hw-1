@@ -12,6 +12,6 @@ namespace MvcAspAzure.Domain.Entity {
         [Required, MaxLength(100)]
         public string StateCode { get; set; } = string.Empty;
 
-        public ICollection<PlaceState> Places { get; set; } = new List<PlaceState>();
+        //public ICollection<PlaceState> Places { get; set; } = new List<PlaceState>();
     }
 }

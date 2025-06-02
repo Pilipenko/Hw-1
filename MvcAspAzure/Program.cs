@@ -40,21 +40,21 @@ builder.Services.AddScoped<IShipmentOperations, ShipmentOperations>();
 builder.Services.AddScoped<CreateShipmentCommandHandler>();
 builder.Services.AddScoped<CreateShipmentCommandValidator>();
 
-builder.Services.AddScoped<DeleteShipmentCommandHandler>();
+builder.Services.AddTransient<DeleteShipmentCommandHandler>();
 
-builder.Services.AddScoped<UpdateShipmentCommandHandler>();
+builder.Services.AddTransient<UpdateShipmentCommandHandler>();
 
 // ---------- Shipment Queries ----------
-builder.Services.AddScoped<GetAllShipmentsHandler>();
-builder.Services.AddScoped<GetShipmentByIdHandler>();
+builder.Services.AddTransient<GetAllShipmentsHandler>();
+builder.Services.AddTransient<GetShipmentByIdHandler>();
 
 // ---------- Warehouse Commands ----------
 builder.Services.AddScoped<CreateWarehouseCommandHandler>();
 builder.Services.AddScoped<CreateWarehouseCommandValidator>();
 
-builder.Services.AddScoped<DeleteWarehouseCommandHandler>();
+builder.Services.AddTransient<DeleteWarehouseCommandHandler>();
 
-builder.Services.AddScoped<UpdateWarehouseCommandHandler>();
+builder.Services.AddTransient<UpdateWarehouseCommandHandler>();
 
 // ---------- Warehouse Queries ----------
 builder.Services.AddTransient<GetAllWarehousesHandler>();
@@ -97,15 +97,10 @@ var app = builder.Build();
 
 // ---------- Middleware ----------
 if (!app.Environment.IsDevelopment()) {
+    app.UseDeveloperExceptionPage();
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseCors("AllowFrontend");
-app.UseAuthorization();
 
 // ---------- Swagger UI ----------
 app.UseSwagger(c => {
@@ -119,10 +114,19 @@ app.UseSwagger(c => {
 });
 
 app.UseSwaggerUI(c => {
-    c.SwaggerEndpoint("/swagger/swagger.json", "MvcAspAzure API V1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MvcAspAzure API V1");
+    c.RoutePrefix = "swagger";
 });
 
 // ---------- Controller Mapping ----------
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors("AllowFrontend");
+app.UseAuthorization();
+
+
 app.UseEndpoints(endpoints => {
     endpoints.MapControllers();
 });
@@ -136,3 +140,4 @@ app.Run();
 
 
 //http://localhost:5097/swagger
+//http://localhost:5097/swagger/index.html

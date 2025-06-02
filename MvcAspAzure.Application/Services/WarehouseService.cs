@@ -43,7 +43,6 @@ namespace MvcAspAzure.Application.Services {
             var warehouseDto = new Domain.Entity.Warehouse {
                 Id = warehouse.Id,
                 PlaceId = warehouse.PlaceId,
-                Place = warehouse.Place,
             };
             return ServiceResult<Domain.Entity.Warehouse>.Ok(warehouseDto);
         }

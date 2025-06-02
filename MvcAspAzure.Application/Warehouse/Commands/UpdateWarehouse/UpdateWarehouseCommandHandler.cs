@@ -13,7 +13,6 @@ namespace MvcAspAzure.Application.Warehouse.Commands.UpdateWarehouse {
         public async Task Handle(UpdateWarehouseCommand command) {
             var warehouse = await _warehouseRepository.GetByIdAsync(command.Id);
             if (warehouse != null) {
-                warehouse.Place = command.Place;
                 warehouse.PlaceId = command.PlaceId;
 
                 await _warehouseRepository.UpdateAsync(warehouse);

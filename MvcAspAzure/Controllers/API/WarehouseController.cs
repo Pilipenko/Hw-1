@@ -29,7 +29,7 @@ namespace MvcAspAzure.Controllers.API {
             _validator = validator;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateWarehouseCommand command) {
             var validationResult = await _validator.ValidateAsync(command);

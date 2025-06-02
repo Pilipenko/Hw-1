@@ -18,6 +18,6 @@ namespace MvcAspAzure.Domain.Entity {
         [ForeignKey(nameof(StateId))]
         public State State { get; set; } = null!;
 
-        public ICollection<Warehouse> Warehouses { get; set; } = new List<Warehouse>();
+        //public ICollection<Warehouse> Warehouses { get; set; } = new List<Warehouse>();
     }
 }

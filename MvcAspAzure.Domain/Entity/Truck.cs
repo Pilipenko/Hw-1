@@ -24,6 +24,6 @@ namespace MvcAspAzure.Domain.Entity {
         [Required, Column(TypeName = "decimal(10,2)")]
         public decimal VolumeCargo { get; set; }
 
-        public ICollection<DriverTruck> DriverTrucks { get; set; } = new List<DriverTruck>();
+        //public ICollection<DriverTruck> DriverTrucks { get; set; } = new List<DriverTruck>();
     }
 }

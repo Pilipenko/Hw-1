@@ -8,7 +8,8 @@ using MvcAspAzure.Domain.Entity;
 
 namespace MvcAspAzure.Domain.Repository {
     public interface IWarehouseRepository : IRepositoryAsync<Warehouse> {
-        Task<IEnumerable<Warehouse>> GetWarehouseByPlaceIdAsync(int warehouseId);
+        Task<IEnumerable<Warehouse>> GetWarehouseByPlaceIdAsync(int placeId);
+        Task<IEnumerable<Warehouse>> GetWarehouseByWarehouseIdAsync(int warehouseId);
     }
 }
 

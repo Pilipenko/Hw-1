@@ -13,9 +13,16 @@ namespace MvcAspAzure.Domain.Repository {
             _context = context;
         }
 
-        public async Task<IEnumerable<Warehouse>> GetWarehouseByPlaceIdAsync(int warehouseId) {
+        public async Task<IEnumerable<Warehouse>> GetWarehouseByPlaceIdAsync(int placeId) {
             return await _context.Warehouse
-                .Where(w => w.PlaceId == warehouseId)
+                .Where(w => w.PlaceId == placeId)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<Warehouse>> GetWarehouseByWarehouseIdAsync(int warehouseId) {
+            return await _context.Warehouse
+                .Where(w => w.Id == warehouseId)
+                .AsNoTracking()
                 .ToListAsync();
         }
     }

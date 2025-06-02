@@ -15,6 +15,6 @@ namespace MvcAspAzure.Domain.Entity {
         [Required]
         public DateTime BirthDate { get; set; }
 
-        public ICollection<DriverTruck> DriverTrucks { get; set; } = new List<DriverTruck>();
+        //public ICollection<DriverTruck> DriverTrucks { get; set; } = new List<DriverTruck>();
     }
 }

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAspAzure.Domain", "..\Mv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcAspAzure.Application", "..\MvcAspAzure.Application\MvcAspAzure.Application.csproj", "{6890D8AB-3549-4B30-BBBF-ACBAB1FC2BD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTestMvcApp", "..\UniTestMvcApp\UniTestMvcApp.csproj", "{C8A1CE7C-E296-46CB-919D-B5A42AE3F08F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{6890D8AB-3549-4B30-BBBF-ACBAB1FC2BD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6890D8AB-3549-4B30-BBBF-ACBAB1FC2BD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6890D8AB-3549-4B30-BBBF-ACBAB1FC2BD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8A1CE7C-E296-46CB-919D-B5A42AE3F08F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8A1CE7C-E296-46CB-919D-B5A42AE3F08F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8A1CE7C-E296-46CB-919D-B5A42AE3F08F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8A1CE7C-E296-46CB-919D-B5A42AE3F08F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

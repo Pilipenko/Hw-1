@@ -6,10 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MvcAspAzure.Application.Services;
 using MvcAspAzure.Application.Services.Interfaces;
 using MvcAspAzure.Application.Shipment.Commands.CreateShipment;
-using MvcAspAzure.Application.Shipment.Commands.DeleteShipment;
 using MvcAspAzure.Application.Shipment.Commands.UpdateShipment;
-using MvcAspAzure.Application.Shipment.Queries.GetAllShipments;
-using MvcAspAzure.Application.Shipment.Queries.GetShipmentById;
 using MvcAspAzure.Domain.Entity;
 
 namespace MvcAspAzure.Controllers.API {

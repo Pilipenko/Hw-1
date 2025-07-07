@@ -20,3 +20,8 @@
 /MvcAspAzure.Infrastructure/obj
 /MvcAspAzure.Infrastructure/bin/Debug/net8.0
 /UniTestMvcApp/bin/Debug/net8.0
+/UniTestMvcApp/obj/Debug/net8.0/UniTestMvcApp.AssemblyInfo.cs
+/UniTestMvcApp/obj/Debug/net8.0/UniTestMvcApp.AssemblyInfoInputs.cache
+/UniTestMvcApp/obj/Debug/net8.0/UniTestMvcApp.assets.cache
+/UniTestMvcApp/obj/Debug/net8.0/UniTestMvcApp.csproj.CoreCompileInputs.cache
+/UniTestMvcApp/obj/Debug/net8.0/UniTestMvcApp.sourcelink.json

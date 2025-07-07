@@ -102,6 +102,6 @@ public class CreateShipmentCommandHandlerTests {
             s.CargoId == command.CargoId
         )), Times.Once);
 
-        Assert.Equalы(insertedShipment.Id, result);
+        Assert.Equals(insertedShipment.Id, result);
     }
 }

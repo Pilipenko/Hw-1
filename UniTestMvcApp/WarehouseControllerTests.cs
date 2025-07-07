@@ -5,7 +5,6 @@ using AutoFixture.AutoMoq;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse;
 using MvcAspAzure.Application.Services;
 using MvcAspAzure.Controllers.API;

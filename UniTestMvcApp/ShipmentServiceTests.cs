@@ -9,7 +9,7 @@ public class ShipmentServiceTests {
     [Theory, AutoMoqData]
     public async Task CreateShipmentAsync_ShouldReturnSuccess_WhenValidationIsValid(
         CreateShipmentCommand shipment,
-        ShipmentService sut,
+        IShipmentService sut,
         Mock<IValidator<CreateShipmentCommand>> shipmentValidatorMock) {
         shipmentValidatorMock.Setup(v => v.ValidateAsync(shipment, default))
             .ReturnsAsync(new FluentValidation.Results.ValidationResult());
@@ -23,7 +23,7 @@ public class ShipmentServiceTests {
     [Theory, AutoMoqData]
     public async Task CreateShipmentAsync_ShouldReturnErrors_WhenValidationFails(
         CreateShipmentCommand shipment,
-        ShipmentService sut,
+        IShipmentService sut,
         Mock<IValidator<CreateShipmentCommand>> shipmentValidatorMock) {
         var failures = new List<FluentValidation.Results.ValidationFailure>
         {
@@ -44,7 +44,7 @@ public class ShipmentServiceTests {
     public async Task GetByIdAsync_ShouldReturnShipment_WhenFound(
         int id,
         MvcAspAzure.Domain.Entity.Shipment shipmentFromRepo,
-        ShipmentService sut,
+        IShipmentService sut,
         Mock<IShipmentRepository> repositoryMock) {
         repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(shipmentFromRepo);
 
@@ -58,7 +58,7 @@ public class ShipmentServiceTests {
     [Theory, AutoMoqData]
     public async Task GetByIdAsync_ShouldReturnFail_WhenShipmentNotFound(
         int id,
-        ShipmentService sut,
+        IShipmentService sut,
         Mock<IShipmentRepository> repositoryMock) {
         repositoryMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync((MvcAspAzure.Domain.Entity.Shipment?)null);
 

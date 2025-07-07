@@ -15,12 +15,12 @@ namespace MvcAspAzure.Controllers.API {
     [ApiController]
     public sealed class ShipmentController : ControllerBase {
         readonly IShipmentOperations _shipmentOperations;
-        readonly ShipmentService _shipmentService;
+        readonly IShipmentService _shipmentService;
         readonly IValidator<CreateShipmentCommand> _validator;
 
         public ShipmentController(
             IShipmentOperations shipmentOperations,
-            ShipmentService shipmentService,
+            IShipmentService shipmentService,
             IValidator<CreateShipmentCommand> validator) {
             _shipmentOperations = shipmentOperations;
             _shipmentService= shipmentService;

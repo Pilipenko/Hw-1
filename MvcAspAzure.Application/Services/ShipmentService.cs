@@ -6,7 +6,12 @@ using MvcAspAzure.Application.Shipment.Commands.CreateShipment;
 using MvcAspAzure.Domain.Repository;
 
 namespace MvcAspAzure.Application.Services {
-    public sealed class ShipmentService {
+    public interface IShipmentService {
+        Task<ServiceResult> CreateShipmentAsync(CreateShipmentCommand command);
+        Task<ServiceResult<Domain.Entity.Shipment>> GetByIdAsync(int id);
+    }
+
+    public sealed class ShipmentService : IShipmentService {
         readonly IValidator<CreateShipmentCommand> _shipmentValidator;
         readonly IShipmentRepository _repository;
 

@@ -43,7 +43,7 @@ public class ShipmentControllerTests {
 
         validatorMock
             .Setup(v => v.ValidateAsync(command, default))
-            .ReturnsAsync(new ValidationResult()); // valid
+            .ReturnsAsync(new ValidationResult());
 
         shipmentServiceMock
             .Setup(s => s.CreateShipmentAsync(command))

@@ -352,6 +352,22 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AutoFixture.AutoFakeItEasy": {
+              "target": "Package",
+              "version": "[4.18.1, )"
+            },
+            "AutoFixture.AutoMoq": {
+              "target": "Package",
+              "version": "[4.18.1, )"
+            },
+            "AutoFixture.Xunit2": {
+              "target": "Package",
+              "version": "[4.18.1, )"
+            },
+            "FluentAssertions": {
+              "target": "Package",
+              "version": "[8.4.0, )"
+            },
             "FluentValidation": {
               "target": "Package",
               "version": "[12.0.0, )"
@@ -368,6 +384,10 @@
               "target": "Package",
               "version": "[3.9.1, )"
             },
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
               "version": "[17.14.1, )"
@@ -378,7 +398,7 @@
             },
             "NUnit": {
               "target": "Package",
-              "version": "[4.3.2, )"
+              "version": "[3.13.3, )"
             },
             "NUnit.Analyzers": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -388,17 +408,13 @@
             },
             "NUnit3TestAdapter": {
               "target": "Package",
-              "version": "[5.0.0, )"
+              "version": "[4.5.0, )"
             },
             "coverlet.collector": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
               "version": "[6.0.4, )"
-            },
-            "xunit.extensibility.core": {
-              "target": "Package",
-              "version": "[2.9.3, )"
             }
           },
           "imports": [

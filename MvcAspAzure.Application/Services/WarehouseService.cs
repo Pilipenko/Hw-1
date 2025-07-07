@@ -11,7 +11,12 @@ using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse;
 using MvcAspAzure.Domain.Repository;
 
 namespace MvcAspAzure.Application.Services {
-    public sealed class WarehouseService {
+    public interface IWarehouseService {
+        Task<ServiceResult> CreateWarehouseAsync(CreateWarehouseCommand command);
+        Task<ServiceResult<Domain.Entity.Warehouse>> GetByIdAsync(int id);
+    }
+
+    public sealed class WarehouseService : IWarehouseService {
         readonly IValidator<CreateWarehouseCommand> _warehouseValidator;
         readonly IWarehouseRepository _repository;
 

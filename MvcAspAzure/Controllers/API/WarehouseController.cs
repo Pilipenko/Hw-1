@@ -1,15 +1,11 @@
 ﻿using FluentValidation;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using MvcAspAzure.Application.Services;
 using MvcAspAzure.Application.Services.Interfaces;
 using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse;
-using MvcAspAzure.Application.Warehouse.Commands.DeleteWarehouse;
 using MvcAspAzure.Application.Warehouse.Commands.UpdateWarehouse;
-using MvcAspAzure.Application.Warehouse.Queries.GetAllWarehouses;
-using MvcAspAzure.Application.Warehouse.Queries.GetWarehouseById;
 using MvcAspAzure.Domain.Entity;
 
 namespace MvcAspAzure.Controllers.API {
@@ -18,11 +14,11 @@ namespace MvcAspAzure.Controllers.API {
     [ApiController]
     public sealed class WarehouseController : ControllerBase {
         readonly IWarehouseOperations _warehouseOperations;
-        readonly WarehouseService _warehouseService;
+        readonly IWarehouseService _warehouseService;
         readonly IValidator<CreateWarehouseCommand> _validator;
         public WarehouseController(
             IWarehouseOperations warehouseOperations,
-            WarehouseService warehouseService,
+            IWarehouseService warehouseService,
             IValidator<CreateWarehouseCommand> validator) {
             _warehouseOperations = warehouseOperations;
             _warehouseService = warehouseService;

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UniTestMvcApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4d7f41a0b43687f099f6a1c424db2ebd48fd2cdf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a8d1d7747f8263be9737eaf690d6caa28d5a426b")]
 [assembly: System.Reflection.AssemblyProductAttribute("UniTestMvcApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UniTestMvcApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

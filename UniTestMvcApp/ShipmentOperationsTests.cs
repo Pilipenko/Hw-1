@@ -1,5 +1,6 @@
 using AutoFixture.Xunit2;
 using Moq;
+using Xunit;
 using MvcAspAzure.Domain.Entity;
 using MvcAspAzure.Application.Shipment.Commands.CreateShipment;
 using MvcAspAzure.Application.Services.Operations;
@@ -18,7 +19,7 @@ public class ShipmentOperationsTests {
 
         var result = await sut.CreateAsync(command);
 
-        Assert.Equals(123, result);
+        Assert.Equal(123, result);
         createHandlerMock.Verify(h => h.Handle(command), Times.Once);
     }
 
@@ -55,7 +56,7 @@ public class ShipmentOperationsTests {
 
         var result = await sut.GetByIdAsync(shipmentId);
 
-        Assert.Equals(expectedShipment, result);
+        Assert.Equal(expectedShipment, result);
     }
 
     [Theory, AutoData]
@@ -69,6 +70,6 @@ public class ShipmentOperationsTests {
 
         var result = await sut.GetAllAsync();
 
-        Assert.Equals(expectedShipments, result);
+        Assert.Equal(expectedShipments, result);
     }
 }

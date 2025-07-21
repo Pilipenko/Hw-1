@@ -8,24 +8,21 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 using Moq;
-
-using MvcAspAzure.Application.Common;
+using Xunit;
 using MvcAspAzure.Application.Services;
 using MvcAspAzure.Application.Services.Interfaces;
 using MvcAspAzure.Application.Shipment.Commands.CreateShipment;
+using MvcAspAzure.Controllers.API;
+using MvcAspAzure.Application.Common;
 
-[TestFixture]
 public class ShipmentControllerTests {
-    private IFixture fixture;
+    readonly IFixture fixture;
+    readonly Mock<IShipmentOperations> shipmentOperationsMock;
+    readonly Mock<ShipmentService> shipmentServiceMock;
+    readonly Mock<IValidator<CreateShipmentCommand>> validatorMock;
+    readonly ShipmentController controller;
 
-    private Mock<IShipmentOperations> shipmentOperationsMock;
-    private Mock<ShipmentService> shipmentServiceMock;
-    private Mock<IValidator<CreateShipmentCommand>> validatorMock;
-
-    private ShipmentController controller;
-
-    [SetUp]
-    public void Setup() {
+    public ShipmentControllerTests() {
         fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
 
         shipmentOperationsMock = fixture.Freeze<Mock<IShipmentOperations>>();
@@ -40,7 +37,6 @@ public class ShipmentControllerTests {
 
     [Theory, AutoData]
     public async Task Create_ValidCommand_ReturnsCreated(CreateShipmentCommand command) {
-
         validatorMock
             .Setup(v => v.ValidateAsync(command, default))
             .ReturnsAsync(new ValidationResult());
@@ -51,20 +47,17 @@ public class ShipmentControllerTests {
 
         var result = await controller.Create(command);
 
-        Assert.IsInstanceOf<CreatedAtActionResult>(result);
-        var createdResult = (CreatedAtActionResult)result;
-
-        Assert.That(createdResult.ActionName, Is.EqualTo(nameof(ShipmentController.GetById)));
-        Assert.That(createdResult.RouteValues["id"], Is.EqualTo(command.Id));
+        var createdResult = Assert.IsType<CreatedAtActionResult>(result);
+        Assert.Equal(nameof(ShipmentController.GetById), createdResult.ActionName);
+        Assert.Equal(command.Id, createdResult.RouteValues["id"]);
     }
 
     [Theory, AutoData]
     public async Task Create_InvalidCommand_ReturnsValidationProblem(CreateShipmentCommand command) {
-
         var failures = new List<ValidationFailure>
         {
-                new ValidationFailure("Name", "Name is required")
-            };
+            new ValidationFailure("Name", "Name is required")
+        };
         var validationResult = new ValidationResult(failures);
 
         validatorMock
@@ -73,47 +66,11 @@ public class ShipmentControllerTests {
 
         var result = await controller.Create(command);
 
-        Assert.IsInstanceOf<ObjectResult>(result);
-        var objectResult = (ObjectResult)result;
-        Assert.AreEqual(400, objectResult.StatusCode);
+        var objectResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(400, objectResult.StatusCode);
 
-        var problemDetails = objectResult.Value as ValidationProblemDetails;
-        Assert.IsNotNull(problemDetails);
-        Assert.IsTrue(problemDetails.Errors.ContainsKey("Name"));
+        var problemDetails = Assert.IsType<ValidationProblemDetails>(objectResult.Value);
+        Assert.True(problemDetails.Errors.ContainsKey("Name"));
     }
 }
 
-public sealed class ShipmentController : ControllerBase {
-    private readonly IShipmentOperations _shipmentOperations;
-    private readonly ShipmentService _shipmentService;
-    private readonly IValidator<CreateShipmentCommand> _validator;
-
-    public ShipmentController(
-        IShipmentOperations shipmentOperations,
-        ShipmentService shipmentService,
-        IValidator<CreateShipmentCommand> validator) {
-        _shipmentOperations = shipmentOperations;
-        _shipmentService = shipmentService;
-        _validator = validator;
-    }
-
-    public async Task<IActionResult> Create(CreateShipmentCommand command) {
-        var validationResult = await _validator.ValidateAsync(command);
-        if (!validationResult.IsValid) {
-            foreach (var error in validationResult.Errors)
-                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-            return ValidationProblem(ModelState);
-        }
-
-        var result = await _shipmentService.CreateShipmentAsync(command);
-
-        if (!result.Success)
-            return BadRequest(result.Errors);
-
-        return CreatedAtAction(nameof(GetById), new { id = command.Id }, null);
-    }
-
-    public async Task<IActionResult> GetById(int id) {
-        return Ok();
-    }
-}

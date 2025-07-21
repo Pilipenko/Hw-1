@@ -11,14 +11,16 @@ using MvcAspAzure.Domain.Data;
 using MvcAspAzure.Domain.Entity;
 using MvcAspAzure.Domain.Repository;
 
+using Xunit;
 
 public class WarehouseRepositoryTests {
     [Theory, AutoData]
     public async Task GetWarehouseByPlaceIdAsync_ReturnsMatchingWarehouses(List<Warehouse> warehouses, int placeId) {
 
-        if (warehouses == null) warehouses = new List<Warehouse>();
+        warehouses ??= new List<Warehouse>();
+
         foreach (var w in warehouses)
-            w.PlaceId = w.PlaceId == placeId ? placeId : placeId + 1;
+            w.PlaceId = (w.PlaceId == placeId) ? placeId : placeId + 1;
 
         var mockSet = CreateMockDbSet(warehouses);
 
@@ -29,15 +31,16 @@ public class WarehouseRepositoryTests {
 
         var result = await repository.GetWarehouseByPlaceIdAsync(placeId);
 
-        Assert.IsTrue(result.All(w => w.PlaceId == placeId));
+        Assert.All(result, w => Assert.Equal(placeId, w.PlaceId));
     }
 
     [Theory, AutoData]
     public async Task GetWarehouseByWarehouseIdAsync_ReturnsMatchingWarehouse(List<Warehouse> warehouses, int warehouseId) {
 
-        if (warehouses == null) warehouses = new List<Warehouse>();
+        warehouses ??= new List<Warehouse>();
+
         foreach (var w in warehouses)
-            w.Id = w.Id == warehouseId ? warehouseId : warehouseId + 1;
+            w.Id = (w.Id == warehouseId) ? warehouseId : warehouseId + 1;
 
         var mockSet = CreateMockDbSet(warehouses);
 
@@ -48,13 +51,14 @@ public class WarehouseRepositoryTests {
 
         var result = await repository.GetWarehouseByWarehouseIdAsync(warehouseId);
 
-        Assert.IsTrue(result.All(w => w.Id == warehouseId));
+        Assert.All(result, w => Assert.Equal(warehouseId, w.Id));
     }
 
     private static Mock<DbSet<Warehouse>> CreateMockDbSet(List<Warehouse> data) {
         var queryable = data.AsQueryable();
 
         var mockSet = new Mock<DbSet<Warehouse>>();
+
         mockSet.As<IQueryable<Warehouse>>().Setup(m => m.Provider).Returns(new AsyncQueryProvider<Warehouse>(queryable.Provider));
         mockSet.As<IQueryable<Warehouse>>().Setup(m => m.Expression).Returns(queryable.Expression);
         mockSet.As<IQueryable<Warehouse>>().Setup(m => m.ElementType).Returns(queryable.ElementType);
@@ -87,22 +91,22 @@ public class WarehouseRepositoryTests {
 
         public AsyncQueryProvider(IQueryProvider inner) => _inner = inner;
 
-        public IQueryable CreateQuery(System.Linq.Expressions.Expression expression)
+        public IQueryable CreateQuery(Expression expression)
             => new AsyncEnumerable<TEntity>(expression);
 
-        public IQueryable<TElement> CreateQuery<TElement>(System.Linq.Expressions.Expression expression)
+        public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
             => new AsyncEnumerable<TElement>(expression);
 
-        public object Execute(System.Linq.Expressions.Expression expression)
+        public object Execute(Expression expression)
             => _inner.Execute(expression);
 
-        public TResult Execute<TResult>(System.Linq.Expressions.Expression expression)
+        public TResult Execute<TResult>(Expression expression)
             => _inner.Execute<TResult>(expression);
 
-        public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(System.Linq.Expressions.Expression expression)
+        public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
             => new AsyncEnumerable<TResult>(expression);
 
-        public Task<TResult> ExecuteAsync<TResult>(System.Linq.Expressions.Expression expression, CancellationToken cancellationToken)
+        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
             => Task.FromResult(Execute<TResult>(expression));
 
         TResult IAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken) {
@@ -114,7 +118,7 @@ public class WarehouseRepositoryTests {
         public AsyncEnumerable(IEnumerable<T> enumerable)
             : base(enumerable) { }
 
-        public AsyncEnumerable(System.Linq.Expressions.Expression expression)
+        public AsyncEnumerable(Expression expression)
             : base(expression) { }
 
         public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)

@@ -1,16 +1,12 @@
-﻿
-using AutoFixture;
-using AutoFixture.AutoMoq;
-using AutoFixture.Xunit2;
-
+﻿using AutoFixture.Xunit2;
 using Moq;
-
+using FluentAssertions;
 using MvcAspAzure.Application.Shipment.Commands.CreateShipment;
 using MvcAspAzure.Application.Shipment.Commands.DeleteShipment;
 using MvcAspAzure.Application.Shipment.Commands.UpdateShipment;
 using MvcAspAzure.Domain.Entity;
 using MvcAspAzure.Domain.Repository;
-
+using Xunit;
 
 public class UpdateShipmentCommandHandlerTests {
     [Theory, AutoMoqData]
@@ -18,17 +14,16 @@ public class UpdateShipmentCommandHandlerTests {
         UpdateShipmentCommand command,
         Shipment existingShipment,
         [Frozen] Mock<IShipmentRepository> shipmentRepositoryMock,
-        UpdateShipmentCommandHandler sut)
-    {
-
+        UpdateShipmentCommandHandler sut) {
         shipmentRepositoryMock.Setup(r => r.GetByIdAsync(command.Id))
             .ReturnsAsync(existingShipment);
 
         await sut.Handle(command);
 
-        Assert.Equals(command.CompletionData, existingShipment.CompletionData);
-        Assert.Equals(command.RouteId, existingShipment.RouteId);
-        Assert.Equals(command.Cargo, existingShipment.Cargo);
+        existingShipment.CompletionData.Should().Be(command.CompletionData);
+        existingShipment.RouteId.Should().Be(command.RouteId);
+        existingShipment.Cargo.Should().Be(command.Cargo);
+
         shipmentRepositoryMock.Verify(r => r.UpdateAsync(existingShipment), Times.Once);
     }
 
@@ -37,9 +32,8 @@ public class UpdateShipmentCommandHandlerTests {
         UpdateShipmentCommand command,
         [Frozen] Mock<IShipmentRepository> shipmentRepositoryMock,
         UpdateShipmentCommandHandler sut) {
-
         shipmentRepositoryMock.Setup(r => r.GetByIdAsync(command.Id))
-            .ReturnsAsync((Shipment)null);
+            .ReturnsAsync((Shipment?)null);
 
         await sut.Handle(command);
 
@@ -54,7 +48,6 @@ public class DeleteShipmentCommandHandlerTests {
         Shipment existingShipment,
         [Frozen] Mock<IShipmentRepository> shipmentRepositoryMock,
         DeleteShipmentCommandHandler sut) {
-
         shipmentRepositoryMock.Setup(r => r.GetByIdAsync(command.Id))
             .ReturnsAsync(existingShipment);
 
@@ -68,9 +61,8 @@ public class DeleteShipmentCommandHandlerTests {
         DeleteShipmentCommand command,
         [Frozen] Mock<IShipmentRepository> shipmentRepositoryMock,
         DeleteShipmentCommandHandler sut) {
-
         shipmentRepositoryMock.Setup(r => r.GetByIdAsync(command.Id))
-            .ReturnsAsync((Shipment)null);
+            .ReturnsAsync((Shipment?)null);
 
         await sut.Handle(command);
 
@@ -85,8 +77,8 @@ public class CreateShipmentCommandHandlerTests {
         Shipment insertedShipment,
         [Frozen] Mock<IShipmentRepository> shipmentRepositoryMock,
         CreateShipmentCommandHandler sut) {
-
         insertedShipment.Id = command.Id;
+
         shipmentRepositoryMock.Setup(r => r.InsertAsync(It.IsAny<Shipment>()))
             .ReturnsAsync(insertedShipment);
 
@@ -102,6 +94,6 @@ public class CreateShipmentCommandHandlerTests {
             s.CargoId == command.CargoId
         )), Times.Once);
 
-        Assert.Equals(insertedShipment.Id, result);
+        result.Should().Be(insertedShipment.Id);
     }
 }

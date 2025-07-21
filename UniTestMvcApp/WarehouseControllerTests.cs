@@ -9,13 +9,10 @@ using MvcAspAzure.Application.Warehouse.Commands.CreateWarehouse;
 using MvcAspAzure.Application.Services;
 using MvcAspAzure.Controllers.API;
 using MvcAspAzure.Application.Common;
+using Xunit;
+using FluentAssertions;
 
 public class WarehouseControllerTests {
-    public class Result {
-        public bool Success { get; set; }
-        public string[] Errors { get; set; }
-    }
-
     private IFixture CreateFixture() {
         var fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
         return fixture;
@@ -27,18 +24,17 @@ public class WarehouseControllerTests {
         [Frozen] Mock<IWarehouseService> serviceMock,
         WarehouseController controller,
         CreateWarehouseCommand command) {
-
         validatorMock.Setup(v => v.ValidateAsync(command, default))
             .ReturnsAsync(new ValidationResult());
 
         serviceMock.Setup(s => s.CreateWarehouseAsync(It.IsAny<CreateWarehouseCommand>()))
-                   .ReturnsAsync(new ServiceResult { Success = true });
+            .ReturnsAsync(new ServiceResult { Success = true });
 
         var result = await controller.Create(command);
 
-        Assert.That(result, Is.TypeOf<CreatedAtActionResult>());
+        result.Should().BeOfType<CreatedAtActionResult>();
         var created = (CreatedAtActionResult)result;
-        Assert.That(created.ActionName, Is.EqualTo(nameof(WarehouseController.GetById)));
+        created.ActionName.Should().Be(nameof(WarehouseController.GetById));
     }
 
     [Theory, AutoMoqData]
@@ -46,7 +42,6 @@ public class WarehouseControllerTests {
         [Frozen] Mock<IValidator<CreateWarehouseCommand>> validatorMock,
         WarehouseController controller,
         CreateWarehouseCommand command) {
-
         var failures = new[]
         {
             new ValidationFailure("Name", "Name is required")
@@ -56,12 +51,13 @@ public class WarehouseControllerTests {
 
         var result = await controller.Create(command);
 
-        var objectResult = result as ObjectResult;
-        Assert.That(objectResult, Is.Not.Null);
-        Assert.That(objectResult!.Value, Is.TypeOf<ValidationProblemDetails>());
+        result.Should().BeOfType<ObjectResult>();
+        var objectResult = (ObjectResult)result;
 
-        var details = (ValidationProblemDetails)objectResult.Value!;
-        Assert.That(details.Errors.ContainsKey("Name"));
+        objectResult.Value.Should().BeOfType<ValidationProblemDetails>();
+        var details = (ValidationProblemDetails)objectResult.Value;
+
+        details.Errors.Should().ContainKey("Name");
     }
 }
 
@@ -69,4 +65,3 @@ public class Result {
     public bool Success { get; set; }
     public required string[] Errors { get; set; }
 }
-

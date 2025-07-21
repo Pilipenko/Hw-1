@@ -1,20 +1,22 @@
 using AutoFixture;
+using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
-
 using Microsoft.EntityFrameworkCore;
-
 using MvcAspAzure.Domain.Data;
 using MvcAspAzure.Domain.Entity;
+using Xunit;
 
 public class ShipmenDbContextAutoDataAttribute : AutoDataAttribute {
-    public ShipmenDbContextAutoDataAttribute() : base(static () => {
-        var fixture = new Fixture();
+    public ShipmenDbContextAutoDataAttribute() : base(() => {
+        var fixture = new Fixture().Customize(new AutoMoqCustomization());
 
         var options = new DbContextOptionsBuilder<ShipmenDbContext>()
-            .UseInMemoryDatabase(databaseName: "Shipment")
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             .Options;
 
         fixture.Inject(options);
+        fixture.Register(() => new ShipmenDbContext(options));
+
         return fixture;
     }) { }
 }
@@ -22,8 +24,9 @@ public class ShipmenDbContextAutoDataAttribute : AutoDataAttribute {
 public class ShipmenDbContextTests {
     [Theory, ShipmenDbContextAutoData]
     public async Task Can_Add_And_Retrieve_Shipment(
-        ShipmenDbContext dbContext,
+        [Frozen] DbContextOptions<ShipmenDbContext> options,
         Shipment shipment) {
+        using var dbContext = new ShipmenDbContext(options);
 
         var route = new Route { Id = shipment.RouteId };
         dbContext.Add(route);
@@ -33,8 +36,9 @@ public class ShipmenDbContextTests {
         await dbContext.SaveChangesAsync();
 
         var fromDb = await dbContext.Shipment.FindAsync(shipment.Id);
+
         Assert.NotNull(fromDb);
-        Assert.Equals(shipment.Id, fromDb.Id);
-        Assert.Equals(shipment.RouteId, fromDb.RouteId);
+        Assert.Equal(shipment.Id, fromDb.Id);
+        Assert.Equal(shipment.RouteId, fromDb.RouteId);
     }
 }

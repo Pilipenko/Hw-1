@@ -1,0 +1,44 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '7.x.x'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restore NuGet packages'
+  inputs:
+    command: 'restore'
+    projects: 'MvcAspAzure/MvcAspAzure.sln'
+
+# project assembly
+- task: DotNetCoreCLI@2
+  displayName: 'Build solution'
+  inputs:
+    command: 'build'
+    projects: 'MvcAspAzure/MvcAspAzure.sln'
+    arguments: '--configuration $(buildConfiguration)'
+
+# run  test
+- task: DotNetCoreCLI@2
+  displayName: 'Run Unit Tests'
+  inputs:
+    command: 'test'
+    projects: 'UniTestMvcApp/UniTestMvcApp.csproj'
+    arguments: '--configuration $(buildConfiguration) --no-build --logger trx'
+
+# result
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results'
+  inputs:
+    testResultsFiles: '**/TestResults/*.trx'
+    testRunTitle: 'Unit Tests'

@@ -34,13 +34,13 @@ jobs:
           git log -n 5 --oneline
 
       # Step 4: Add Azure DevOps remote
-      - name: Add Azure Remote
-        env:
-          AZURE_USER: ${{ secrets.AZURE_USER }}
-          AZURE_PAT: ${{ secrets.AZURE_PAT }}
-        run: |
-          git remote add azure https://$AZURE_USER:$AZURE_PAT@dev.azure.com/neoniealplan/MvcAspAzure/_git/MvcAspAzure
-          git remote -v
+        - name: Add Azure Remote
+          env:
+            AZURE_USER: ${{ secrets.AZURE_USER }}
+            AZURE_PAT: ${{ secrets.AZURE_PAT }}
+          run: |
+            git remote add azure https://${AZURE_USER}:${AZURE_PAT}@dev.azure.com/neoniealplan/MvcAspAzure/_git/MvcAspAzure
+            git remote -v
 
       # Step 5: Push changes to Azure with debug
       - name: Push to Azure

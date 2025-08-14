@@ -48,3 +48,4 @@ jobs:
         run: |
           echo "Pushing to Azure..."
           git push azure main --force
+

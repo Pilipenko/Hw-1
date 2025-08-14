@@ -1,4 +1,4 @@
-name: Sync to Azure Repos
+name: Sync to Azure Repos with Debug
 
 # Trigger workflow on push to main branch
 on:
@@ -17,18 +17,36 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Step 2: Configure git and push to Azure DevOps
-      - name: Push to Azure Repos
+      # Step 2: Configure git
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub CI"
+          git config user.email "ci-bot@example.com"
+
+      # Step 3: Show current remotes and branches (debug)
+      - name: Debug Git Info
+        run: |
+          echo "Current remotes:"
+          git remote -v
+          echo "Current branches:"
+          git branch -a
+          echo "Last 5 commits:"
+          git log -n 5 --oneline
+
+      # Step 4: Add Azure DevOps remote
+      - name: Add Azure Remote
         env:
           AZURE_USER: ${{ secrets.AZURE_USER }}
           AZURE_PAT: ${{ secrets.AZURE_PAT }}
         run: |
-          # Set git commit author for the push
-          git config user.name "GitHub CI"
-          git config user.email "ci-bot@example.com"
-          
-          # Add Azure DevOps repository as a remote
           git remote add azure https://$AZURE_USER:$AZURE_PAT@dev.azure.com/neoniealplan/MvcAspAzure/_git/MvcAspAzure
-          
-          # Push changes to Azure main branch
-          git push azure main --force
+          git remote -v
+
+      # Step 5: Push changes to Azure with debug
+      - name: Push to Azure
+        env:
+          AZURE_USER: ${{ secrets.AZURE_USER }}
+          AZURE_PAT: ${{ secrets.AZURE_PAT }}
+        run: |
+          echo "Pushing to Azure..."
+          git push azure main --force || { echo "Push failed"; git remote show azure; git log -n 5; exit 1; }

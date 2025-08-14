@@ -1,0 +1,25 @@
+name: Sync to Azure Repos
+
+on:
+  push:
+    branches:
+      - main   # branch
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # take history
+
+      - name: Push to Azure Repos
+        run: |
+          git config user.name "GitHub CI"
+          git config user.email "ci-bot@example.com"
+          git remote add azure https://$AZURE_USER:$AZURE_PAT@dev.azure.com/neoniealplan/MvcAspAzure/_git/MvcAspAzure
+          git push azure main --force
+        env:
+          AZURE_USER: ${{ secrets.AZURE_USER }}
+          AZURE_PAT: ${{ secrets.AZURE_PAT }}

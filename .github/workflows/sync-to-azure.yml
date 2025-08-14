@@ -1,4 +1,4 @@
-name: Sync to Azure Repos with Debug
+name: Sync to Azure Repos
 
 # Trigger workflow on push to main branch
 on:
@@ -17,13 +17,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Step 2: Configure git
+      # Step 2: Configure git user
       - name: Configure Git
         run: |
           git config user.name "GitHub CI"
           git config user.email "ci-bot@example.com"
 
-      # Step 3: Show current remotes and branches (debug)
+      # Step 3: Debug info (optional)
       - name: Debug Git Info
         run: |
           echo "Current remotes:"
@@ -33,20 +33,34 @@ jobs:
           echo "Last 5 commits:"
           git log -n 5 --oneline
 
-      # Step 4: Add Azure DevOps remote
+      # Step 4: Add Azure DevOps remote (PAT encoded in Bash)
       - name: Add Azure Remote
         env:
-          AZURE_USER: ${{ secrets.AZURE_USER }}
+          AZURE_USER: azure
           AZURE_PAT: ${{ secrets.AZURE_PAT }}
         run: |
-          git remote add azure https://${AZURE_USER}:${AZURE_PAT}@dev.azure.com/neoniealplan/MvcAspAzure/_git/MvcAspAzure
+          # URL-encode PAT using Bash
+          url_encode() {
+            local string="${1}"
+            local strlen=${#string}
+            local encoded=""
+            local pos c o
+            for (( pos=0 ; pos<strlen ; pos++ )); do
+               c=${string:$pos:1}
+               case "$c" in
+                   [-_.~a-zA-Z0-9] ) o="$c" ;;
+                   * ) printf -v o '%%%02X' "'$c"
+               esac
+               encoded+="$o"
+            done
+            echo "$encoded"
+          }
+          ENCODED_PAT=$(url_encode "$AZURE_PAT")
+          git remote add azure https://${AZURE_USER}:${ENCODED_PAT}@dev.azure.com/neoniealplan/MvcAspAzure/_git/MvcAspAzure
           git remote -v
 
-      # Step 5: Push changes to Azure with debug
+      # Step 5: Push changes to Azure
       - name: Push to Azure
-        env:
-          AZURE_USER: ${{ secrets.AZURE_USER }}
-          AZURE_PAT: ${{ secrets.AZURE_PAT }}
         run: |
           echo "Pushing to Azure..."
-          git push azure main --force || { echo "Push failed"; git remote show azure; git log -n 5; exit 1; }
+          git push azure main --force || { echo "Push fai

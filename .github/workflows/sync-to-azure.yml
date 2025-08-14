@@ -50,3 +50,4 @@ jobs:
         run: |
           echo "Pushing to Azure..."
           git push azure main --force || { echo "Push failed"; git remote show azure; git log -n 5; exit 1; }
+

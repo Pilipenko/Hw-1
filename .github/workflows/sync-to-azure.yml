@@ -33,16 +33,18 @@ jobs:
           echo "Last 5 commits:"
           git log -n 5 --oneline
 
-      # Step 4: Add Azure DevOps remote (without embedding secrets in URL)
+      # Step 4: Add Azure DevOps remote (username: 'azure', password: PAT)
       - name: Add Azure Remote
+        env:
+          AZURE_PAT: ${{ secrets.AZURE_PAT }}
         run: |
-          git remote add azure https://dev.azure.com/neoniealplan/MvcAspAzure/_git/MvcAspAzure
+          git remote add azure https://azure:${AZURE_PAT}@dev.azure.com/neoniealplan/MvcAspAzure/_git/MvcAspAzure
           git remote -v
 
-      # Step 5: Push changes to Azure using AZURE_PAT from secrets
+      # Step 5: Push changes to Azure
       - name: Push to Azure
         env:
           AZURE_PAT: ${{ secrets.AZURE_PAT }}
         run: |
           echo "Pushing to Azure..."
-          git push https://:${AZURE_PAT}@dev.azure.com/neoniealplan/MvcAspAzure/_git/MvcAspAzure main --force
+          git push azure main --force
